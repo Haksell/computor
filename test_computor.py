@@ -5,8 +5,8 @@ import pytest
 # TODO test sans * (2x=1) (x^3+18x^2+x+1=0)
 # TODO test display_complex
 # TODO test display_reduced_form
-# TODO cubic
-# TODO test get_solutions
+# TODO test get_solutions (2nd and 3rd)
+# TODO full bonus
 
 
 def check_equation(s, expected):

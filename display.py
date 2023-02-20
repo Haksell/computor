@@ -2,7 +2,6 @@ from utils import get_degree
 
 
 PRECISION = 6
-EPSILON = 1e-6
 
 
 def display_reduced_form(reduced):
@@ -57,23 +56,20 @@ def display_second_degree(reduced):
 
 # https://stackoverflow.com/a/74198367/10793260
 def display_third_degree(reduced):
-    def gen_cbrt(polynomial):
-        solution = set()
-        root1 = polynomial ** (1 / 3)
-        root2 = (polynomial ** (1 / 3)) * (-1 / 2 + (3**0.5 * 1j) / 2)
-        root3 = (polynomial ** (1 / 3)) * (-1 / 2 - (3**0.5 * 1j) / 2)
-        solution.update({root1, root2, root3})
-        return solution
+    def cube_roots(z):
+        root1 = z ** (1 / 3)
+        sqrt3j2 = (3**0.5 * 1j) / 2
+        return {root1, root1 * (-0.5 + sqrt3j2), root1 * (-0.5 - sqrt3j2)}
 
     def cardano(a, b, c, d):
         solutions = set()
         p = (3 * a * c - b**2) / (3 * a**2)
         q = (2 * b**3 - 9 * a * b * c + 27 * a**2 * d) / (27 * a**3)
-        alpha = gen_cbrt(-q / 2 + ((q / 2) ** 2 + (p / 3) ** 3) ** 0.5)
-        beta = gen_cbrt(-q / 2 - ((q / 2) ** 2 + (p / 3) ** 3) ** 0.5)
+        alpha = cube_roots(-q / 2 + ((q / 2) ** 2 + (p / 3) ** 3) ** 0.5)
+        beta = cube_roots(-q / 2 - ((q / 2) ** 2 + (p / 3) ** 3) ** 0.5)
         for i in alpha:
             for j in beta:
-                if abs((i * j) + p / 3) <= EPSILON:
+                if abs((i * j) + p / 3) <= 1e-6:
                     z = i + j - b / (3 * a)
                     solutions.add(
                         complex(round(z.real, PRECISION), round(z.imag, PRECISION))
