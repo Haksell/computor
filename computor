@@ -22,7 +22,7 @@ f{sol:g}
 # TODO floats
 
 LEGIT_CHARACTERS = "0123456789X=.-+*^"
-REGEX_MONOMIAL = r"(([+-])(?:\d+)(?:\.\d+)?(\*X(\^\d+)?)?)"
+REGEX_MONOMIAL = r"(([+-])(\d+)(\.\d+)?(\*X(\^\d+)?)?)"
 REGEX_POLYNOMIAL = rf"({REGEX_MONOMIAL})+"
 
 
