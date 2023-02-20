@@ -2,6 +2,10 @@ from decimal import Decimal
 from parse_equation import parse_equation
 import pytest
 
+# TODO test sans * (2x=1)
+# TODO test display_complex
+# TODO test display_reduced_form
+
 
 def check_equation(s, expected):
     assert parse_equation(s) == {p: Decimal(a) for p, a in expected.items()}
@@ -25,6 +29,7 @@ def test_parse_equation_good():
 
 
 def test_parse_equation_bad():
-    for s in ["42", "x = 0", "2X = 0", "="]:
+    for s in ["42", "2x=0", "="]:
         with pytest.raises(SystemExit):
+            print(s)
             parse_equation(s)

@@ -43,13 +43,15 @@ def parse_polynomial(s):
 
 
 def parse_equation(s):
-    s = "".join(c for c in s if not c.isspace())
+    s = "".join(c for c in s if not c.isspace()).upper()
     ft_assert(s.count("=") == 1, "There should be exactly one equal sign")
+    unknown_characters = "".join(c for c in s if c not in LEGIT_CHARACTERS)
     ft_assert(
-        all(c in LEGIT_CHARACTERS for c in s), "Unknown character present in string"
+        not unknown_characters,
+        f"Unknown characters present in string: {unknown_characters}",
     )
     left, right = s.split("=")
-    ft_assert(left, f"{left} is empty")
-    ft_assert(right, f"{right} is empty")
+    ft_assert(left, f"{left!r} is empty")
+    ft_assert(right, f"{right!r} is empty")
     left, right = parse_polynomial(left), parse_polynomial(right)
     return reduce_equation(left, right)
