@@ -1,0 +1,56 @@
+#!/usr/bin/env python
+import re
+import sys
+
+"""
+Fail:
+    != 1 '='
+
+Degree 0:
+    0 = 0 (∞)
+    0 != 0 (0)
+Degree 1:
+    ax + b = 0 (1)
+Degree 2:
+    Δ > 0 (2 real)
+    Δ == 0 (1)
+    Δ < 0 (2 complex)
+
+f{sol:g}
+"""
+
+# TODO floats
+
+LEGIT_CHARACTERS = "0123456789X=.-+*^"
+REGEX_MONOMIAL = r"(([+-])(?:\d+)(?:\.\d+)?(\*X(\^\d+)?)?)"
+REGEX_POLYNOMIAL = rf"({REGEX_MONOMIAL})+"
+
+
+def ft_assert(check, message):
+    if not check:
+        print(message)
+        sys.exit(1)
+
+
+def parse_part(s):
+    if s[0] != "-":
+        s = "+" + s
+    print(s)
+    ft_assert(re.fullmatch(REGEX_POLYNOMIAL, s), f"{s} is not properly formatted")
+    return re.findall(REGEX_MONOMIAL, s)
+
+
+def parse_equation(s):
+    s = "".join(c for c in s if not c.isspace())
+    ft_assert(s.count("=") == 1, "There should be exactly one equal sign")
+    ft_assert(
+        all(c in LEGIT_CHARACTERS for c in s), "Unknown character present in string"
+    )
+    left, right = s.split("=")
+    return parse_part(left), parse_part(right)
+
+
+if __name__ == "__main__":
+    ft_assert(len(sys.argv) == 2, f"Usage: {sys.argv[0]} 'equation'")
+    left, right = parse_equation(sys.argv[1])
+    print(*left, *right, sep="\n")
