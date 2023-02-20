@@ -1,141 +1,17 @@
 #!/usr/bin/env python
-from collections import defaultdict
-from dataclasses import dataclass
-from decimal import Decimal
-from math import sqrt
-import re
 import sys
 
-"""
-Degree 0:
-    0 = 0 (∞)
-    0 != 0 (0)
-Degree 1:
-    ax + b = 0 (1)
-Degree 2:
-    Δ > 0 (2 real)
-    Δ == 0 (1)
-    Δ < 0 (2 complex)
-Degree >= 3: bad
-    
-f{sol:g}
-"""
-
-
-@dataclass
-class Monomial:
-    a: Decimal
-    p: int
-
-
-PRECISION = 6
-LEGIT_CHARACTERS = "0123456789X=.-+*^"
-REGEX_A = r"(?:[+-])(?:\d+)(?:\.\d+)?"
-REGEX_P = r"X(?:\^\d+)?"
-REGEX_MONOMIAL = rf"({REGEX_A})\*({REGEX_P})|({REGEX_A})|({REGEX_P})"
-REGEX_POLYNOMIAL = rf"({REGEX_MONOMIAL})+"
-
-
-def ft_assert(check, message):
-    if not check:
-        print(message)
-        sys.exit(1)
-
-
-def create_monomial(a1, p1, a2, p2):
-    a = Decimal(1 if p2 else a1 if a1 else a2)
-    p = p1 or p2
-    p = 0 if p == "" else 1 if p == "X" else int(p[2:])
-    return Monomial(a, p)
-
-
-def reduce_equation(left, right):
-    reduced = defaultdict(Decimal)
-    for monomial in left:
-        reduced[monomial.p] += monomial.a
-    for monomial in right:
-        reduced[monomial.p] -= monomial.a
-    return {p: float(a) for p, a in reduced.items() if a != 0}
-
-
-def parse_polynomial(s):
-    if s[0].isdigit():
-        s = "+" + s
-    print(s)
-    ft_assert(re.fullmatch(REGEX_POLYNOMIAL, s), f"{s} is not properly formatted")
-    polynomial = re.findall(REGEX_MONOMIAL, s)
-    print(polynomial)
-    return [create_monomial(*groups) for groups in polynomial]
-
-
-def parse_equation(s):
-    s = "".join(c for c in s if not c.isspace())
-    ft_assert(s.count("=") == 1, "There should be exactly one equal sign")
-    ft_assert(
-        all(c in LEGIT_CHARACTERS for c in s), "Unknown character present in string"
-    )
-    left, right = s.split("=")
-    print(left, right)
-    return parse_polynomial(left), parse_polynomial(right)
-
-
-def get_degree(reduced):
-    return max(reduced.keys(), default=-1)
-
-
-def display_reduced_form(reduced):
-    line = ["Reduced form:"]
-    if not reduced:
-        reduced[0] = Decimal(0)
-    for p in range(max(reduced.keys()) + 1):
-        m = reduced.get(p, 0)
-        if p != 0:
-            line.append("-" if m < 0 else "+")
-        line.append(f"{abs(m)} * X^{p}")
-    line.append("=")
-    line.append("0")
-    print(*line)
-
-
-def display_solution(x):
-    print(round(x, 6))
-
-
-def display_solutions(reduced):
-    a, b, c = reduced.get(2, 0), reduced.get(1, 0), reduced.get(0, 0)
-    degree = get_degree(reduced)
-    if degree == -1:
-        print("There are infinitely many solutions.")
-    elif degree == 0:
-        print("There are no solutions.")
-    elif degree == 1:
-        print("The solution is:")
-        print(round(-c / b, PRECISION))
-    elif degree == 2:
-        discriminant = b**2 - 4 * a * c
-        a2 = 2 * a
-        if discriminant < 0:
-            print("Discriminant is strictly negative, the two solutions are:")
-            real = round(-b / a2, PRECISION)
-            imag = round(sqrt(-discriminant) / a2, PRECISION)
-            print(f"{real} + {imag}i")
-            print(f"{real} - {imag}i")
-        elif discriminant > 0:
-            print("Discriminant is strictly positive, the two solutions are:")
-            print(round((-b - sqrt(discriminant)) / a2, PRECISION))
-            print(round((-b + sqrt(discriminant)) / a2, PRECISION))
-        else:
-            print("Discriminant zero, the solutions of multiplicity 2 is:")
-            print(round(-b / a2, PRECISION))
-    else:
-        print("The polynomial degree is strictly greater than 2, I can't solve.")
-
+from display import (
+    display_polynomial_degree,
+    display_reduced_form,
+    display_solutions,
+)
+from parse_equation import parse_equation
+from utils import ft_assert
 
 if __name__ == "__main__":
     ft_assert(len(sys.argv) == 2, f"Usage: {sys.argv[0]} 'equation'")
-    left, right = parse_equation(sys.argv[1])
-    print(left, right)
-    reduced = reduce_equation(left, right)
+    reduced = parse_equation(sys.argv[1])
     display_reduced_form(reduced)
-    print(f"Polynomial degree: {get_degree(reduced)}")
+    display_polynomial_degree(reduced)
     display_solutions(reduced)
