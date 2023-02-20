@@ -2,6 +2,7 @@ from utils import get_degree
 
 
 PRECISION = 6
+EPSILON = 1e-6
 
 
 def display_reduced_form(reduced):
@@ -72,7 +73,7 @@ def display_third_degree(reduced):
         beta = gen_cbrt(-q / 2 - ((q / 2) ** 2 + (p / 3) ** 3) ** 0.5)
         for i in alpha:
             for j in beta:
-                if abs((i * j) + p / 3) <= 0.00001:
+                if abs((i * j) + p / 3) <= EPSILON:
                     z = i + j - b / (3 * a)
                     solutions.add(
                         complex(round(z.real, PRECISION), round(z.imag, PRECISION))
