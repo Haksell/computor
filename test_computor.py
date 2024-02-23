@@ -1,4 +1,5 @@
 from decimal import Decimal
+from display import display_reduced_form
 from parse_equation import parse_equation
 import pytest
 
@@ -8,11 +9,10 @@ import pytest
 # TODO full bonus
 
 
-def check_equation(s, expected):
-    assert parse_equation(s) == list(map(Decimal, expected))
-
-
 def test_parse_equation_good():
+    def check_equation(s, expected):
+        assert parse_equation(s) == list(map(Decimal, expected))
+
     check_equation("0=0", [])
     check_equation("3X=2X+1*X^1", [])
     check_equation("1=0", [1])
@@ -35,3 +35,18 @@ def test_parse_equation_bad():
     for s in ["42", "2x=0", "=", "X^-1 = 42", "(2+2)*X^2=0"]:
         with pytest.raises(SystemExit):
             parse_equation(s)
+
+
+def test_display_reduced_form(capfd):
+    def check_reduced_form(reduced, expected):
+        display_reduced_form(reduced)
+        out, _ = capfd.readouterr()
+        assert out == f"Reduced form: {expected} = 0\n"
+
+    check_reduced_form([], "0")
+    check_reduced_form([42], "42")
+    check_reduced_form([Decimal("-17.3")], "-17.3")
+    check_reduced_form(
+        [Decimal("-17.3"), Decimal("4.2"), 0, -4],
+        "-17.3 * X^0 + 4.2 * X^1 + 0 * X^2 - 4 * X^3",
+    )

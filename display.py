@@ -6,12 +6,13 @@ PRECISION = 6
 
 def display_reduced_form(reduced):
     line = ["Reduced form:"]
-    if not reduced:
-        reduced[0] = 0
-    for i, (p, m) in enumerate(sorted(reduced.items(), reverse=True)):
-        if i != 0:
-            line.append("-" if m < 0 else "+")
-        line.append(f"{m if i==0 else abs(m)} * X^{p}")
+    if len(reduced) <= 1:
+        line.append(reduced[0] if reduced else 0)
+    else:
+        for d, v in enumerate(reduced):
+            if d != 0:
+                line.append("-" if v < 0 else "+")
+            line.append(f"{v if d==0 else abs(v)} * X^{d}")
     line.append("=")
     line.append("0")
     print(*line)
