@@ -32,6 +32,6 @@ def test_parse_equation_good():
 
 
 def test_parse_equation_bad():
-    for s in ["42", "2x=0", "="]:
+    for s in ["42", "2x=0", "=", "X^-1 = 42", "(2+2)*X^2=0"]:
         with pytest.raises(SystemExit):
             parse_equation(s)
