@@ -8,4 +8,4 @@ def ft_assert(check, message):
 
 
 def get_degree(reduced):
-    return max(reduced.keys(), default=-1)
+    return len(reduced) - 1

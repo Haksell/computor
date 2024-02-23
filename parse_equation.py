@@ -1,14 +1,13 @@
-from collections import defaultdict
 from dataclasses import dataclass
 from decimal import Decimal
 from itertools import chain
 import re
 from utils import ft_assert
 
-LEGIT_CHARACTERS = "0123456789X=.-+*^"
-REGEX_A = r"(?:\d+)(?:\.\d+)?"
-REGEX_P = r"X(?:\^\d+)?"
-REGEX_MONOMIAL = rf"([+-])(?:({REGEX_A})\*({REGEX_P})|({REGEX_A})|({REGEX_P}))"
+VALID_CHARACTERS = "0123456789X=.-+*^"
+REGEX_V = r"(?:\d+)(?:\.\d+)?"
+REGEX_D = r"X(?:\^\d+)?"
+REGEX_MONOMIAL = rf"([+-])(?:({REGEX_V})\*?({REGEX_D})|({REGEX_V})|({REGEX_D}))"
 REGEX_POLYNOMIAL = rf"({REGEX_MONOMIAL})+"
 
 
@@ -49,10 +48,10 @@ def parse_polynomial(s):
 def parse_equation(s):
     s = "".join(c for c in s if not c.isspace())
     ft_assert(s.count("=") == 1, "There should be exactly one equal sign")
-    illegal_characters = [c for c in s if c not in LEGIT_CHARACTERS]
+    invalid_characters = [c for c in s if c not in VALID_CHARACTERS]
     ft_assert(
-        not illegal_characters,
-        f"Illegal characters present in string: {illegal_characters}",
+        not invalid_characters,
+        f"Invalid characters present in string: {invalid_characters}",
     )
     left, right = s.split("=")
     ft_assert(left, f"{left!r} is empty")
