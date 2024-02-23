@@ -97,4 +97,4 @@ def display_solutions(reduced):
     elif degree == 3:
         display_third_degree(reduced)
     else:
-        print("The polynomial degree is strictly greater than 2, I can't solve.")
+        print("The polynomial degree is strictly greater than 3, I can't solve.")
