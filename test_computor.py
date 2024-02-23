@@ -1,5 +1,5 @@
 from decimal import Decimal
-from display import display_reduced_form
+from display import display_reduced_form, display_solutions
 from parse_equation import parse_equation
 import pytest
 
@@ -49,4 +49,23 @@ def test_display_reduced_form(capfd):
     check_reduced_form(
         [Decimal("-17.3"), Decimal("4.2"), 0, -4],
         "-17.3 * X^0 + 4.2 * X^1 + 0 * X^2 - 4 * X^3",
+    )
+
+
+def test_display_solutions(capfd):
+    def check_solutions(reduced, expected):
+        display_solutions(reduced)
+        out, _ = capfd.readouterr()
+        assert out == expected
+
+    check_solutions([], "There are infinitely many solutions.\n")
+    check_solutions([42], "There are no solutions.\n")
+    check_solutions([Decimal("-13.37")], "There are no solutions.\n")
+    check_solutions([0, 2], "The solution is 0.\n")
+    check_solutions([6, 3], "The solution is -2.\n")
+    check_solutions([2, -3], "The solution is 2/3.\n")
+    check_solutions([Decimal("-4.2"), 3], "The solution is 7/5.\n")
+    check_solutions(
+        [1, 2, 3, 4, 5],
+        "The polynomial degree is strictly greater than 3, I can't solve.\n",
     )

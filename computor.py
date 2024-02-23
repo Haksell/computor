@@ -9,4 +9,4 @@ if __name__ == "__main__":
     reduced = parse_equation(sys.argv[1])
     display_reduced_form(reduced)
     display_polynomial_degree(reduced)
-    # display_solutions(reduced)
+    display_solutions(reduced)

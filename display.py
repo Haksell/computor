@@ -1,3 +1,4 @@
+from fractions import Fraction
 from utils import get_degree
 
 
@@ -85,17 +86,16 @@ def display_third_degree(reduced):
 
 def display_solutions(reduced):
     degree = get_degree(reduced)
-    reduced = {p: float(a) for p, a in reduced.items()}
+    reduced = list(map(Fraction, reduced))
     if degree == -1:
         print("There are infinitely many solutions.")
     elif degree == 0:
         print("There are no solutions.")
     elif degree == 1:
-        print("The solution is:")
-        display_complex(-reduced.get(0, 0) / reduced.get(1, 0))
-    elif degree == 2:
-        display_second_degree(reduced)
-    elif degree == 3:
-        display_third_degree(reduced)
+        print(f"The solution is {-reduced[0] / reduced[1]}.")
+    # elif degree == 2:
+    #     display_second_degree(reduced)
+    # elif degree == 3:
+    #     display_third_degree(reduced)
     else:
         print("The polynomial degree is strictly greater than 3, I can't solve.")
