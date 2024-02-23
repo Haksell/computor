@@ -5,6 +5,17 @@ from utils import get_degree
 PRECISION = 6
 
 
+def format_real_solution(x):
+    assert isinstance(x, float) or isinstance(x, Fraction)
+    rounded = str(round(float(x), PRECISION))
+    if isinstance(x, float):
+        return rounded
+    elif x.is_integer():
+        return str(x)
+    else:
+        return f"{x} ({rounded})"
+
+
 def display_reduced_form(reduced):
     line = ["Reduced form:"]
     if len(reduced) <= 1:
@@ -41,11 +52,17 @@ def display_complex(z):
     )
 
 
+def display_first_degree(reduced):
+    print(f"The solution is {format_real_solution(-reduced[0] / reduced[1])}")
+
+
 def display_second_degree(reduced):
-    a, b, c = (reduced.get(2, 0), reduced.get(1, 0), reduced.get(0, 0))
-    discriminant = b**2 - 4 * a * c
+    c, b, a = reduced
+    discriminant = b * b - 4 * a * c
+    print(discriminant, type(discriminant))
     x1 = (-b - discriminant**0.5) / (2 * a)
     x2 = (-b + discriminant**0.5) / (2 * a)
+    print(x1, type(x1))
     if discriminant == 0:
         print("Discriminant zero, the solution of multiplicity 2 is:")
         display_complex(x1)
@@ -92,9 +109,9 @@ def display_solutions(reduced):
     elif degree == 0:
         print("There are no solutions.")
     elif degree == 1:
-        print(f"The solution is {-reduced[0] / reduced[1]}.")
-    # elif degree == 2:
-    #     display_second_degree(reduced)
+        display_first_degree(reduced)
+    elif degree == 2:
+        display_second_degree(reduced)
     # elif degree == 3:
     #     display_third_degree(reduced)
     else:
