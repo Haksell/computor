@@ -1,6 +1,7 @@
 from collections import defaultdict
 from dataclasses import dataclass
 from decimal import Decimal
+from itertools import chain
 import re
 from utils import ft_assert
 
@@ -13,8 +14,8 @@ REGEX_POLYNOMIAL = rf"({REGEX_MONOMIAL})+"
 
 @dataclass
 class Monomial:
-    a: Decimal
-    p: int
+    value: Decimal
+    degree: int
 
 
 def create_monomial(sign, a1, p1, a2, p2):
@@ -26,12 +27,15 @@ def create_monomial(sign, a1, p1, a2, p2):
 
 
 def reduce_equation(left, right):
-    reduced = defaultdict(Decimal)
-    for monomial in left:
-        reduced[monomial.p] += monomial.a
-    for monomial in right:
-        reduced[monomial.p] -= monomial.a
-    return {p: a for p, a in reduced.items() if a != 0}
+    max_degree = max((m.degree for m in chain(left, right)), default=-1)
+    reduced = [0] * (max_degree + 1)
+    for m in chain(left):
+        reduced[m.degree] += m.value
+    for m in chain(right):
+        reduced[m.degree] -= m.value
+    while reduced and reduced[-1] == 0:
+        reduced.pop()
+    return reduced
 
 
 def parse_polynomial(s):
@@ -43,12 +47,12 @@ def parse_polynomial(s):
 
 
 def parse_equation(s):
-    s = "".join(c for c in s if not c.isspace()).upper()
+    s = "".join(c for c in s if not c.isspace())
     ft_assert(s.count("=") == 1, "There should be exactly one equal sign")
-    unknown_characters = "".join(c for c in s if c not in LEGIT_CHARACTERS)
+    illegal_characters = [c for c in s if c not in LEGIT_CHARACTERS]
     ft_assert(
-        not unknown_characters,
-        f"Unknown characters present in string: {unknown_characters}",
+        not illegal_characters,
+        f"Illegal characters present in string: {illegal_characters}",
     )
     left, right = s.split("=")
     ft_assert(left, f"{left!r} is empty")
