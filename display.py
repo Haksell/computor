@@ -57,6 +57,9 @@ def display_first_degree(reduced):
 
 
 def display_second_degree(reduced):
+    def sqrt_fraction(frac):
+        pass
+
     c, b, a = reduced
     discriminant = b * b - 4 * a * c
     print(discriminant, type(discriminant))

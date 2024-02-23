@@ -2,6 +2,7 @@ from decimal import Decimal
 from display import display_reduced_form, display_solutions
 from parse_equation import parse_equation
 import pytest
+from utils import is_square
 
 # TODO test display_complex
 # TODO test display_reduced_form
@@ -69,3 +70,21 @@ def test_display_solutions(capfd):
         [1, 2, 3, 4, 5],
         "The polynomial degree is strictly greater than 3, I can't solve.\n",
     )
+
+
+def test_is_square():
+    assert not is_square(-4)
+    assert not is_square(-3)
+    assert not is_square(-2)
+    assert not is_square(-1)
+    assert is_square(0)
+    assert is_square(1)
+    assert not is_square(2)
+    assert not is_square(3)
+    assert is_square(4)
+    assert not is_square(5)
+    assert not is_square(6)
+    assert not is_square(7)
+    assert not is_square(8)
+    assert is_square(9)
+    assert not is_square(10)
