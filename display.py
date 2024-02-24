@@ -5,17 +5,6 @@ from utils import get_degree, sqrt_fraction
 PRECISION = 6
 
 
-def format_real_solution(x):
-    assert isinstance(x, float) or isinstance(x, Fraction)
-    rounded = str(round(float(x), PRECISION))
-    if x.is_integer():
-        return str(x)
-    elif isinstance(x, float):
-        return rounded
-    else:
-        return f"{x} ({rounded})"
-
-
 def display_reduced_form(reduced):
     line = ["Reduced form:"]
     if len(reduced) <= 1:
@@ -34,6 +23,17 @@ def display_polynomial_degree(reduced):
     print(f"Polynomial degree: {get_degree(reduced)}")
 
 
+def format_real(x):
+    assert isinstance(x, float) or isinstance(x, Fraction)
+    rounded = str(round(float(x), PRECISION))
+    if x.is_integer():
+        return str(x)
+    elif isinstance(x, float):
+        return rounded
+    else:
+        return f"{x} ({rounded})"
+
+
 def format_complex(z):
     z = complex(z)
     real = round(z.real, PRECISION)
@@ -45,7 +45,7 @@ def format_complex(z):
 
 
 def display_first_degree(reduced):
-    print(f"The solution is {format_real_solution(-reduced[0] / reduced[1])}")
+    print(f"The solution is {format_real(-reduced[0] / reduced[1])}")
 
 
 def display_second_degree(reduced):
@@ -56,15 +56,15 @@ def display_second_degree(reduced):
     x2 = (-b + sqrt_discriminant) / (2 * a)
     if discriminant > 0:
         print("Discriminant is strictly positive, the two solutions are:")
-        print(format_real_solution(x1))
-        print(format_real_solution(x2))
+        print(format_real(x1))
+        print(format_real(x2))
     elif discriminant < 0:
         print("Discriminant is strictly negative, the two solutions are:")
         print(format_complex(x1))
         print(format_complex(x2))
     else:
         print(
-            f"Discriminant is zero, the solution of multiplicity 2 is {format_real_solution(x1)}"
+            f"Discriminant is zero, the solution of multiplicity 2 is {format_real(x1)}"
         )
 
 
