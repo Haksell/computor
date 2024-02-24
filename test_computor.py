@@ -7,10 +7,8 @@ import pytest
 from print_solutions import print_solutions
 from utils import exact_isqrt, sqrt_fraction
 
-# TODO test print_complex
-# TODO test print_reduced_form
-# TODO test get_solutions (2nd and 3rd)
-# TODO full bonus
+# TODO: test __print_third_degree
+# TODO: test __print_fourth_degree
 
 
 def test_exact_isqrt():
