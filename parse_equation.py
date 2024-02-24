@@ -17,7 +17,7 @@ class Monomial:
     degree: int
 
 
-def create_monomial(sign, a1, p1, a2, p2):
+def __create_monomial(sign, a1, p1, a2, p2):
     sign = 1 if sign == "+" else -1
     a = sign * Decimal(1 if p2 else a1 if a1 else a2)
     p = p1 or p2
@@ -25,7 +25,7 @@ def create_monomial(sign, a1, p1, a2, p2):
     return Monomial(a, p)
 
 
-def reduce_equation(left, right):
+def __reduce_equation(left, right):
     max_degree = max((m.degree for m in chain(left, right)), default=-1)
     reduced = [0] * (max_degree + 1)
     for m in chain(left):
@@ -37,11 +37,11 @@ def reduce_equation(left, right):
     return reduced
 
 
-def parse_polynomial(s):
+def __parse_polynomial(s):
     p = s if s[0] in "-+" else "+" + s
     ft_assert(re.fullmatch(REGEX_POLYNOMIAL, p), f'"{s}" is not properly formatted')
     polynomial = re.findall(REGEX_MONOMIAL, p)
-    return [create_monomial(*groups) for groups in polynomial]
+    return [__create_monomial(*groups) for groups in polynomial]
 
 
 def parse_equation(s):
@@ -56,5 +56,5 @@ def parse_equation(s):
     ft_assert(left or right, "both terms are empty")
     ft_assert(left, "left term is empty")
     ft_assert(right, "right term is empty")
-    left, right = parse_polynomial(left), parse_polynomial(right)
-    return reduce_equation(left, right)
+    left, right = __parse_polynomial(left), __parse_polynomial(right)
+    return __reduce_equation(left, right)

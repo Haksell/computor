@@ -1,13 +1,14 @@
+from computor import print_reduced_form
 from decimal import Decimal
 from fractions import Fraction
 from math import sqrt
-from display import display_reduced_form, display_solutions
 from parse_equation import parse_equation
 import pytest
+from print_solutions import print_solutions
 from utils import exact_isqrt, sqrt_fraction
 
-# TODO test display_complex
-# TODO test display_reduced_form
+# TODO test print_complex
+# TODO test print_reduced_form
 # TODO test get_solutions (2nd and 3rd)
 # TODO full bonus
 
@@ -73,9 +74,9 @@ def test_parse_equation_bad():
             parse_equation(s)
 
 
-def test_display_reduced_form(capfd):
+def test_print_reduced_form(capfd):
     def check_reduced_form(reduced, expected):
-        display_reduced_form(reduced)
+        print_reduced_form(reduced)
         out, _ = capfd.readouterr()
         assert out == f"Reduced form: {expected} = 0\n"
 
@@ -88,9 +89,9 @@ def test_display_reduced_form(capfd):
     )
 
 
-def test_display_solutions(capfd):
+def test_print_solutions(capfd):
     def check_solutions(reduced, expected):
-        display_solutions(reduced)
+        print_solutions(reduced)
         out, _ = capfd.readouterr()
         assert out == expected
 
