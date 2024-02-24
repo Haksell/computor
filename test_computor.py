@@ -121,8 +121,19 @@ def test_display_solutions(capfd):
         [4.5, -6, 2],
         "Discriminant is zero, the solution of multiplicity 2 is 3/2 (1.5)\n",
     )
-    # check_solutions([5, -6, 2], "")
-    # check_solutions([6, -6, 2], "")
+    check_solutions(
+        [1, 0, 1],
+        "Discriminant is strictly negative, the two solutions are:\n-1i\n1i\n",
+    )
+    check_solutions(
+        [8, 0, 2],
+        "Discriminant is strictly negative, the two solutions are:\n-2i\n2i\n",
+    )
+    check_solutions(
+        [4, 3, 3],
+        "Discriminant is strictly negative, the two solutions are:\n-0.5-1.040833i\n-0.5+1.040833i\n",
+    )
+    # check_solutions([-64, 0, 0, 1], "")
     check_solutions(
         [1, 2, 3, 4, 5],
         "The polynomial degree is strictly greater than 3, I can't solve.\n",
