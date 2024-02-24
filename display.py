@@ -1,5 +1,5 @@
 from fractions import Fraction
-from utils import get_degree
+from utils import get_degree, sqrt_fraction
 
 
 PRECISION = 6
@@ -8,10 +8,10 @@ PRECISION = 6
 def format_real_solution(x):
     assert isinstance(x, float) or isinstance(x, Fraction)
     rounded = str(round(float(x), PRECISION))
-    if isinstance(x, float):
-        return rounded
-    elif x.is_integer():
+    if x.is_integer():
         return str(x)
+    elif isinstance(x, float):
+        return rounded
     else:
         return f"{x} ({rounded})"
 
@@ -34,22 +34,14 @@ def display_polynomial_degree(reduced):
     print(f"Polynomial degree: {get_degree(reduced)}")
 
 
-def display_complex(z):
+def format_complex(z):
     z = complex(z)
     real = round(z.real, PRECISION)
     imag = round(z.imag, PRECISION)
     if real.is_integer() and imag.is_integer():
         real = int(real)
         imag = int(imag)
-    print(
-        f"{real}{imag:+}i"
-        if real and imag
-        else f"{real}"
-        if real
-        else f"{imag}i"
-        if imag
-        else "0"
-    )
+    return f"{real}{imag:+}i" if real and imag else f"{imag}i" if imag else str(z)
 
 
 def display_first_degree(reduced):
@@ -57,23 +49,23 @@ def display_first_degree(reduced):
 
 
 def display_second_degree(reduced):
-    def sqrt_fraction(frac):
-        pass
-
     c, b, a = reduced
     discriminant = b * b - 4 * a * c
-    print(discriminant, type(discriminant))
-    x1 = (-b - discriminant**0.5) / (2 * a)
-    x2 = (-b + discriminant**0.5) / (2 * a)
-    print(x1, type(x1))
-    if discriminant == 0:
-        print("Discriminant zero, the solution of multiplicity 2 is:")
-        display_complex(x1)
+    sqrt_discriminant = sqrt_fraction(discriminant)
+    x1 = (-b - sqrt_discriminant) / (2 * a)
+    x2 = (-b + sqrt_discriminant) / (2 * a)
+    if discriminant > 0:
+        print("Discriminant is strictly positive, the two solutions are:")
+        print(format_real_solution(x1))
+        print(format_real_solution(x2))
+    elif discriminant < 0:
+        print("Discriminant is strictly negative, the two solutions are:")
+        print(format_complex(x1))
+        print(format_complex(x2))
     else:
-        sign = "negative" if discriminant < 0 else "positive"
-        print(f"Discriminant is strictly {sign}, the two solutions are:")
-        display_complex(x1)
-        display_complex(x2)
+        print(
+            f"Discriminant is zero, the solution of multiplicity 2 is {format_real_solution(x1)}"
+        )
 
 
 # https://stackoverflow.com/a/74198367/10793260
@@ -101,7 +93,7 @@ def display_third_degree(reduced):
     solutions = cardano(*[float(reduced.get(i, 0)) for i in [3, 2, 1, 0]])
     print(f"There are {len(solutions)} solutions:")
     for solution in solutions:
-        display_complex(solution)
+        print(format_complex(solution))
 
 
 def display_solutions(reduced):

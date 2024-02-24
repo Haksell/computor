@@ -38,10 +38,9 @@ def reduce_equation(left, right):
 
 
 def parse_polynomial(s):
-    if s[0] not in "-+":
-        s = "+" + s
-    ft_assert(re.fullmatch(REGEX_POLYNOMIAL, s), f'"{s}" is not properly formatted')
-    polynomial = re.findall(REGEX_MONOMIAL, s)
+    p = s if s[0] in "-+" else "+" + s
+    ft_assert(re.fullmatch(REGEX_POLYNOMIAL, p), f'"{s}" is not properly formatted')
+    polynomial = re.findall(REGEX_MONOMIAL, p)
     return [create_monomial(*groups) for groups in polynomial]
 
 
@@ -54,7 +53,8 @@ def parse_equation(s):
         f"Invalid characters present in string: {invalid_characters}",
     )
     left, right = s.split("=")
-    ft_assert(left, f"{left!r} is empty")
-    ft_assert(right, f"{right!r} is empty")
+    ft_assert(left or right, "both terms are empty")
+    ft_assert(left, "left term is empty")
+    ft_assert(right, "right term is empty")
     left, right = parse_polynomial(left), parse_polynomial(right)
     return reduce_equation(left, right)
