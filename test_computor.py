@@ -6,9 +6,13 @@ from math import sqrt
 import pytest
 from src.parse_equation import parse_equation
 from src.print_solutions import print_solutions
+from src.solve import solve_third_degree
 from src.utils import exact_isqrt, is_integer, sqrt_fraction
 
-# TODO: test __print_third_degree
+
+def __is_complex_close(a, b):
+    assert isinstance(a, float) or isinstance(a, complex)
+    return abs(a - b) < 1e-4
 
 
 def test_exact_isqrt():
@@ -60,16 +64,12 @@ def test_is_integer():
 
 
 def test_sqrt_fraction():
-    def is_complex_close(a, b):
-        assert isinstance(a, float) or isinstance(a, complex)
-        return abs(a - b) < 1e-4
-
     assert sqrt_fraction(Fraction(8, 2)) == Fraction(2, 1)
     assert sqrt_fraction(Fraction(9, 4)) == Fraction(3, 2)
     assert sqrt_fraction(Fraction(0, 42)) == Fraction(0, 1)
-    assert is_complex_close(sqrt_fraction(Fraction(7, 2)), sqrt(3.5))
-    assert is_complex_close(sqrt_fraction(Fraction(-4, 1)), 2j)
-    assert is_complex_close(
+    assert __is_complex_close(sqrt_fraction(Fraction(7, 2)), sqrt(3.5))
+    assert __is_complex_close(sqrt_fraction(Fraction(-4, 1)), 2j)
+    assert __is_complex_close(
         sqrt_fraction(Fraction(-42, 10)), 1.2548895456552942e-16 + 2.04939015319192j
     )
 
@@ -136,15 +136,15 @@ def test_print_solutions(capfd):
     )
     check_solutions(
         [Decimal("-9.68"), 0, 2],
-        "Discriminant is strictly positive, the two solutions are:\n-11/5 (-2.2)\n11/5 (2.2)\n",
+        "Discriminant is positive, the two solutions are:\n-11/5 (-2.2)\n11/5 (2.2)\n",
     )
     check_solutions(
         [3, -6, 2],
-        "Discriminant is strictly positive, the two solutions are:\n0.633975\n2.366025\n",
+        "Discriminant is positive, the two solutions are:\n0.633975\n2.366025\n",
     )
     check_solutions(
         [4, -6, 2],
-        "Discriminant is strictly positive, the two solutions are:\n1\n2\n",
+        "Discriminant is positive, the two solutions are:\n1\n2\n",
     )
     check_solutions(
         [4.5, -6, 2],
@@ -152,18 +152,45 @@ def test_print_solutions(capfd):
     )
     check_solutions(
         [1, 0, 1],
-        "Discriminant is strictly negative, the two solutions are:\n-1i\n1i\n",
+        "Discriminant is negative, the two solutions are:\n-1i\n1i\n",
     )
     check_solutions(
         [8, 0, 2],
-        "Discriminant is strictly negative, the two solutions are:\n-2i\n2i\n",
+        "Discriminant is negative, the two solutions are:\n-2i\n2i\n",
     )
     check_solutions(
         [4, 3, 3],
-        "Discriminant is strictly negative, the two solutions are:\n-0.5-1.040833i\n-0.5+1.040833i\n",
+        "Discriminant is negative, the two solutions are:\n-0.5-1.040833i\n-0.5+1.040833i\n",
     )
-    # check_solutions([-64, 0, 0, 1], "")
     check_solutions(
         [1, 2, 3, 4, 5],
-        "The polynomial degree is strictly greater than 3, I can't solve.\n",
+        "The polynomial degree is greater than 3, I can't solve.\n",
     )
+
+
+def test_third_degree():
+    with pytest.raises(AssertionError):
+        solve_third_degree([3, 2, 1, 0])
+    for reduced in (
+        [0, 1, 2, 3],
+        [1, 2, 3, 4],
+        [math.pi, math.pi, math.pi, math.pi],
+        [0, 0, 0, 1],
+        [0, 0, 1, 1],
+        [0, 1, 0, 1],
+        [0, 1, 1, 1],
+        [1, 0, 0, 1],
+        [1, 0, 1, 1],
+        [1, 1, 0, 1],
+        [1, 1, 1, 1],
+        [0, 0, 0, 2],
+        [0, 0, 0, 3],
+        [0, 0, 0, -1],
+        [0, 0, 0, -2],
+        [0.1, 0.2, 0.3, 0.4],
+        [-0.6, -1.1, 42, 0.7],
+    ):
+        d, c, b, a = reduced
+        _, solutions = solve_third_degree(reduced)
+        for x in solutions:
+            assert __is_complex_close(a * x**3 + b * x**2 + c * x + d, 0)

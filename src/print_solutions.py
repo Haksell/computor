@@ -1,5 +1,6 @@
 from fractions import Fraction
-from src.utils import get_degree, is_integer, sqrt_fraction
+from src.solve import solve_second_degree, solve_third_degree
+from src.utils import get_degree, is_integer
 
 
 PRECISION = 6
@@ -7,6 +8,8 @@ PRECISION = 6
 
 def __format_real(x):
     assert isinstance(x, float) or isinstance(x, Fraction)
+    if isinstance(x, float):
+        x += 0.0  # avoids -0.0
     rounded = str(round(float(x), PRECISION))
     if is_integer(x):
         return str(x)
@@ -37,17 +40,13 @@ def __print_first_degree(reduced):
 
 
 def __print_second_degree(reduced):
-    c, b, a = reduced
-    discriminant = b * b - 4 * a * c
-    sqrt_discriminant = sqrt_fraction(discriminant)
-    x1 = (-b - sqrt_discriminant) / (2 * a)
-    x2 = (-b + sqrt_discriminant) / (2 * a)
+    discriminant, (x1, x2) = solve_second_degree(reduced)
     if discriminant > 0:
-        print("Discriminant is strictly positive, the two solutions are:")
+        print("Discriminant is positive, the two solutions are:")
         print(__format_real(x1))
         print(__format_real(x2))
     elif discriminant < 0:
-        print("Discriminant is strictly negative, the two solutions are:")
+        print("Discriminant is negative, the two solutions are:")
         print(__format_complex(x1))
         print(__format_complex(x2))
     else:
@@ -56,32 +55,18 @@ def __print_second_degree(reduced):
         )
 
 
-# https://stackoverflow.com/a/74198367/10793260
-# def __print_third_degree(reduced):
-#     def cube_roots(z):
-#         root1 = z ** (1 / 3)
-#         sqrt3j2 = (3**0.5 * 1j) / 2
-#         return {root1, root1 * (-0.5 + sqrt3j2), root1 * (-0.5 - sqrt3j2)}
-
-#     def cardano(a, b, c, d):
-#         solutions = set()
-#         p = (3 * a * c - b**2) / (3 * a**2)
-#         q = (2 * b**3 - 9 * a * b * c + 27 * a**2 * d) / (27 * a**3)
-#         alpha = cube_roots(-q / 2 + ((q / 2) ** 2 + (p / 3) ** 3) ** 0.5)
-#         beta = cube_roots(-q / 2 - ((q / 2) ** 2 + (p / 3) ** 3) ** 0.5)
-#         for i in alpha:
-#             for j in beta:
-#                 if abs((i * j) + p / 3) <= 1e-6:
-#                     z = i + j - b / (3 * a)
-#                     solutions.add(
-#                         complex(round(z.real, PRECISION), round(z.imag, PRECISION))
-#                     )
-#         return solutions
-
-#     solutions = cardano(*reversed(reduced))
-#     print(f"There are {len(solutions)} solutions:")
-#     for solution in solutions:
-#         print(__format_complex(solution))
+def __print_third_degree(reduced):
+    discriminant, (x1, x2, x3) = solve_third_degree(reduced)
+    if discriminant >= 0:
+        print("Discriminant is non-negative, the 3 real solutions are:")
+        for x in sorted([x1.real, x2.real, x3.real]):
+            print(__format_real(x))
+    elif discriminant < 0:
+        print("Discriminant is negative, the 3 real solutions are:")
+        x1, x2, x3 = sorted([x1, x2, x3], key=lambda x: abs(x.imag))
+        print(__format_real(x1.real))
+        print(__format_complex(x2))
+        print(__format_complex(x3))
 
 
 def print_solutions(reduced):
@@ -95,7 +80,7 @@ def print_solutions(reduced):
         __print_first_degree(reduced)
     elif degree == 2:
         __print_second_degree(reduced)
-    # elif degree == 3:
-    #     __print_third_degree(reduced)
+    elif degree == 3:
+        __print_third_degree(reduced)
     else:
-        print("The polynomial degree is strictly greater than 3, I can't solve.")
+        print("The polynomial degree is greater than 3, I can't solve.")
