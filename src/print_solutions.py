@@ -1,5 +1,5 @@
 from fractions import Fraction
-from utils import get_degree, is_integer, sqrt_fraction
+from src.utils import get_degree, is_integer, sqrt_fraction
 
 
 PRECISION = 6

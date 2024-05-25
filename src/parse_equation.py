@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from decimal import Decimal
 from itertools import chain
 import re
-from utils import ft_assert
+from src.utils import ft_assert
 
 VALID_CHARACTERS = "0123456789X=.-+*^"
 REGEX_V = r"(?:\d+)(?:\.\d+)?"

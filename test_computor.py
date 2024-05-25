@@ -3,10 +3,10 @@ from computor import print_reduced_form
 from decimal import Decimal
 from fractions import Fraction
 from math import sqrt
-from parse_equation import parse_equation
+from src.parse_equation import parse_equation
 import pytest
-from print_solutions import print_solutions
-from utils import exact_isqrt, is_integer, sqrt_fraction
+from src.print_solutions import print_solutions
+from src.utils import exact_isqrt, is_integer, sqrt_fraction
 
 # TODO: test __print_third_degree
 
