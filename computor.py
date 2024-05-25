@@ -1,7 +1,7 @@
 from src.print_solutions import print_solutions
 from src.parse_equation import parse_equation
-import sys
 from src.utils import ft_assert, get_degree
+import sys
 
 
 def print_reduced_form(reduced):
