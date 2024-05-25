@@ -3,3 +3,6 @@ clean:
 
 loc:
 	find . -name '*.py' | sort | xargs wc -l
+
+test:
+	@pytest -rA -vv
