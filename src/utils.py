@@ -1,6 +1,5 @@
 from decimal import Decimal
 from fractions import Fraction
-from math import isqrt
 import sys
 
 
@@ -18,8 +17,16 @@ def exact_isqrt(n):
     assert isinstance(n, int)
     if n < 0:
         return None
-    i = isqrt(n)
-    return i if i * i == n else None
+    if n == 0:
+        return 0
+    g1 = 0
+    g2 = n
+    while True:
+        g3 = (g2 + n // g2) >> 1
+        if g3 == g1:
+            return g1 if g1 * g1 == n else None
+        g1 = g2
+        g2 = g3
 
 
 def sqrt_fraction(frac):
