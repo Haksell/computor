@@ -3,8 +3,8 @@ from computor import print_reduced_form
 from decimal import Decimal
 from fractions import Fraction
 from math import sqrt
-from src.parse_equation import parse_equation
 import pytest
+from src.parse_equation import parse_equation
 from src.print_solutions import print_solutions
 from src.utils import exact_isqrt, is_integer, sqrt_fraction
 
