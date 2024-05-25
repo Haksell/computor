@@ -1,5 +1,5 @@
 from fractions import Fraction
-from utils import get_degree, sqrt_fraction
+from utils import get_degree, is_integer, sqrt_fraction
 
 
 PRECISION = 6
@@ -8,7 +8,7 @@ PRECISION = 6
 def __format_real(x):
     assert isinstance(x, float) or isinstance(x, Fraction)
     rounded = str(round(float(x), PRECISION))
-    if x.is_integer():
+    if is_integer(x):
         return str(x)
     elif isinstance(x, float):
         return rounded

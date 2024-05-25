@@ -1,5 +1,6 @@
+from decimal import Decimal
 from fractions import Fraction
-from math import isqrt, sqrt
+from math import isqrt
 import sys
 
 
@@ -30,3 +31,18 @@ def sqrt_fraction(frac):
         and (isqrt_denom := exact_isqrt(frac.denominator)) is not None
         else frac**0.5
     )
+
+
+def is_integer(x):
+    if isinstance(x, int):
+        return True
+    elif isinstance(x, float):
+        return x.is_integer()
+    elif isinstance(x, complex):
+        return x.real.is_integer() and x.imag == 0
+    elif isinstance(x, Decimal):
+        return x.as_integer_ratio()[1] == 1
+    elif isinstance(x, Fraction):
+        return x.denominator == 1
+    else:
+        ft_assert(False, f"type {type(x)} not supported in function is_integer")

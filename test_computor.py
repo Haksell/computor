@@ -1,3 +1,4 @@
+import math
 from computor import print_reduced_form
 from decimal import Decimal
 from fractions import Fraction
@@ -5,10 +6,9 @@ from math import sqrt
 from parse_equation import parse_equation
 import pytest
 from print_solutions import print_solutions
-from utils import exact_isqrt, sqrt_fraction
+from utils import exact_isqrt, is_integer, sqrt_fraction
 
 # TODO: test __print_third_degree
-# TODO: test __print_fourth_degree
 
 
 def test_exact_isqrt():
@@ -27,6 +27,36 @@ def test_exact_isqrt():
     assert exact_isqrt(8) is None
     assert exact_isqrt(9) == 3
     assert exact_isqrt(10) is None
+    assert exact_isqrt(11) is None
+    assert exact_isqrt(12) is None
+    assert exact_isqrt(13) is None
+    assert exact_isqrt(14) is None
+    assert exact_isqrt(15) is None
+    assert exact_isqrt(16) == 4
+    assert exact_isqrt(17) is None
+    assert exact_isqrt(18) is None
+    assert exact_isqrt(19) is None
+    assert exact_isqrt(20) is None
+
+
+def test_is_integer():
+    assert is_integer(42)
+    assert is_integer(0)
+    assert not is_integer(42.5)
+    assert is_integer(42.0)
+    assert is_integer(0.0)
+    assert not is_integer(3 + 4j)
+    assert not is_integer(complex(math.pi, 0))
+    assert is_integer(3.0 + 0j)
+    assert is_integer(complex(0, 0))
+    assert not is_integer(Fraction(3, 2))
+    assert is_integer(Fraction(42, 21))
+    assert is_integer(Fraction(0, 42))
+    assert not is_integer(Decimal("42.1"))
+    assert is_integer(Decimal("42.0000"))
+    assert is_integer(Decimal("0"))
+    with pytest.raises(SystemExit):
+        is_integer("42")
 
 
 def test_sqrt_fraction():
