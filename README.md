@@ -8,10 +8,8 @@
 
 ## bonus
 
-Here is a bonus list you might want to implement:
 - [X] Manage entry mistakes
 - [X] Manage free form entries
 - [X] Display solutions as irreducible fractions if it makes sense
 - [ ] Cubic equations
-- [ ] Quartic equations
 - [ ] Tester
