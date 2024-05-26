@@ -58,11 +58,13 @@ def __print_second_degree(reduced):
 def __print_third_degree(reduced):
     discriminant, (x1, x2, x3) = solve_third_degree(reduced)
     if discriminant >= 0:
-        print("Discriminant is non-negative, the 3 real solutions are:")
+        print("Discriminant is non-negative, there are 3 real solutions:")
         for x in sorted([x1.real, x2.real, x3.real]):
             print(__format_real(x))
     elif discriminant < 0:
-        print("Discriminant is negative, the 3 real solutions are:")
+        print(
+            "Discriminant is negative, there are 1 real solution and 2 complex solutions:"
+        )
         x1, x2, x3 = sorted([x1, x2, x3], key=lambda x: abs(x.imag))
         print(__format_real(x1.real))
         print(__format_complex(x2))
